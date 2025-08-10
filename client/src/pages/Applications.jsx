@@ -2,6 +2,8 @@ import React from 'react'
 import Navbar from '../components/Navbar'
 import { assets, jobsApplied } from '../assets/assets'
 import moment from 'moment'
+import Footer from '../components/Footer'
+
 
 const Applications = () => {
   const [isEdit, setIsEdit] = React.useState(false)
@@ -65,6 +67,7 @@ const Applications = () => {
         </tbody>
       </table>
     </div>
+    <Footer />
     </>
   )
 }
