@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { assets } from '../assets/assets'
 import { AppContext } from '../context/AppContext.jsx'
 
@@ -23,6 +23,14 @@ const RecruiterLogin = () => {
       setIsTextDataSubmitted(true)
     }
   }
+
+  React.useEffect(() => {
+    document.body.style.overflow = 'hidden'
+
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  },[])
 
 
   return (
