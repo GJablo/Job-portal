@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import Quill from 'quill';
-import { JobCategories } from '../assets/assets';
+import { JobCategories, JobLocations } from '../assets/assets';
 
 const AddJob = () => {
 
@@ -51,7 +51,31 @@ const AddJob = () => {
           </select>
         </div>
 
+        <div>
+          <p>Job Location</p>
+          <select onChange={e => setLocation(e.target.value)}>
+            {JobLocations.map((location, index) => (
+              <option key={index} value={location}>{location}</option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <p>Job Level</p>
+          <select onChange={e => setLevel(e.target.value)}> 
+            <option value="Beginner level">Beginner level</option>
+            <option value="Intermediate level">Intermediate level</option>
+            <option value="Senior level">Senior level</option>
+          </select>
+        </div>
+
       </div>
+      <div>
+        <p>Job Salary</p>
+        <input onChange={e => setSalary(e.target.value)} type="Number" placeholder="2500" />
+      </div>
+
+      <button type="">ADD</button>
 
     </form>
   )
