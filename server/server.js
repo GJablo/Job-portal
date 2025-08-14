@@ -5,6 +5,7 @@ import 'dotenv/config'
 import connectDB from './config/db.js'
 import './config/instrument.js'
 import { clerkWebhooks } from "./controllers/webhooks.js"
+import companyRoutes from "./routes/companyRoutes.js"
 
 // Initialize Express
 const  app = express()
@@ -19,6 +20,8 @@ app.use(express.json())
 // Routes
 app.get('/', (req, res) => res.send('API Working'))
 app.post('/webhooks', clerkWebhooks)
+
+app.use('/api/company', companyRoutes)
 
 // testing sentry route
 app.get("/debug-sentry", function mainHandler(req, res) {
