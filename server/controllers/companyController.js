@@ -54,33 +54,36 @@ export const registerCompany = async (req, res) => {
 
 // login a company
 export const loginCompany = async (req, res) => {
-  const { email, password } = req.body
+  const { email, password } = req.body;
 
   try {
-    const company = await Company.findOne({ email })
+    const company = await Company.findOne({ email });
 
-    if (bcrypt.compare(password, company.password)) {
-      res.json({
-        success: true,
-        company: {
-          _id: company._id,
-          name: company.name,
-          email: company.email,
-          image: company.image
-        },
-        token: generateToken(company._id)
-
-      })
-
+    if (!company) {
+      return res.json({ success: false, message: "Company not found" });
     }
-    else {
-      res.json({ success: false, message: "Invalid email or password" })
+
+    const isMatch = await bcrypt.compare(password, company.password);
+    if (!isMatch) {
+      return res.json({ success: false, message: "Invalid credentials" });
     }
+
+    res.json({
+      success: true,
+      company: {
+        _id: company._id,
+        name: company.name,
+        email: company.email,
+        image: company.image
+      },
+      token: generateToken(company._id)
+    });
+
   } catch (error) {
-    res.json({ success: false, message: error.message })
+    res.json({ success: false, message: error.message });
   }
+};
 
-}
 
 // get company data
 export const getCompanyData = async (req, res) => {
@@ -127,13 +130,13 @@ export const getCompanyJobApplicants = async (req, res) => { }
 export const getCompanyPostedJobs = async (req, res) => {
   try {
     const companyId = req.company._id
-    const jobs = await Job.find({companyId})
+    const jobs = await Job.find({ companyId })
 
     // Adding No. of applicants info data
 
-    res.json({success: true, jobsData: jobs})
+    res.json({ success: true, jobsData: jobs })
   } catch (error) {
-    res.json({success: false, message: error.message})
+    res.json({ success: false, message: error.message })
   }
 }
 
@@ -143,7 +146,7 @@ export const changeJobApplicationsStatus = async (req, res) => { }
 // change job visibility
 export const changeVisibility = async (req, res) => {
   try {
-    const {id} = req.body
+    const { id } = req.body
     const companyId = req.company._id
     const job = await Job.findById(id)
 
@@ -151,8 +154,8 @@ export const changeVisibility = async (req, res) => {
       job.visible = !job.visible
     }
     await job.save()
-    res.json({success: true, job})
+    res.json({ success: true, job })
   } catch (error) {
-    res.json({success: false, message: error.message})
+    res.json({ success: false, message: error.message })
   }
 }
