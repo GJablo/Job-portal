@@ -7,6 +7,7 @@ import './config/instrument.js'
 import { clerkWebhooks } from "./controllers/webhooks.js"
 import companyRoutes from "./routes/companyRoutes.js"
 import connectCloudinary from "./config/cloudinary.js"
+import jobRoutes from "./routes/jobRoutes.js"
 
 // Initialize Express
 const  app = express()
@@ -25,6 +26,7 @@ app.get('/', (req, res) => res.send('API Working'))
 app.post('/webhooks', clerkWebhooks)
 
 app.use('/api/company', companyRoutes)
+app.use('/api/jobs', jobRoutes)
 
 // testing sentry route
 app.get("/debug-sentry", function mainHandler(req, res) {
