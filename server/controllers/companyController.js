@@ -130,13 +130,13 @@ export const getCompanyJobApplicants = async (req, res) => { }
 export const getCompanyPostedJobs = async (req, res) => {
   try {
     const companyId = req.company._id
-    const jobs = await Job.find({companyId})
+    const jobs = await Job.find({ companyId })
 
     // Adding No. of applicants info data
 
-    res.json({success: true, jobsData: jobs})
+    res.json({ success: true, jobsData: jobs })
   } catch (error) {
-    res.json({success: false, message: error.message})
+    res.json({ success: false, message: error.message })
   }
 }
 
@@ -146,7 +146,7 @@ export const changeJobApplicationsStatus = async (req, res) => { }
 // change job visibility
 export const changeVisibility = async (req, res) => {
   try {
-    const {id} = req.body
+    const { id } = req.body
     const companyId = req.company._id
     const job = await Job.findById(id)
 
@@ -154,8 +154,8 @@ export const changeVisibility = async (req, res) => {
       job.visible = !job.visible
     }
     await job.save()
-    res.json({success: true, job})
+    res.json({ success: true, job })
   } catch (error) {
-    res.json({success: false, message: error.message})
+    res.json({ success: false, message: error.message })
   }
 }

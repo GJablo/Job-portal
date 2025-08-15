@@ -10,11 +10,16 @@ export const AppContextProvider = (props) => {
     location: '',
   });
 
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
+
   const [isSearched, setIsSearched] = React.useState(false);
 
   const [jobs, setJobs] = React.useState([]);
 
   const [showRecruiterLogin, setShowRecruiterLogin] = React.useState(false);
+
+  const [companyToken, setCompanyToken] = React.useState(null);
+  const [companyData, setCompanyData] = React.useState(null);
 
   // Function to fetch jobs
   const fetchJobs = async () => {
@@ -34,7 +39,13 @@ export const AppContextProvider = (props) => {
     setIsSearched,
     showRecruiterLogin,
     setShowRecruiterLogin,
+    companyToken,
+    setCompanyToken,
+    companyData,
+    setCompanyData,
+    backendUrl,
   };
+
   return (
     <AppContext.Provider value={value}>
       {props.children}
