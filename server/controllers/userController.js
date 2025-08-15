@@ -1,5 +1,6 @@
 // get user data
-export const getUserData = async (req, res) => {}
+export const getUserData = async (req, res) => {
+}
 
 // apply for job
 export const applyForJob = async (req, res) => {}
