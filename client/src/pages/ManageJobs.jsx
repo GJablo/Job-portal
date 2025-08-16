@@ -10,7 +10,7 @@ const ManageJobs = () => {
 
   const navigate = useNavigate()
 
-  const [jobs, setJobs] = React.useState(false);
+  const [jobs, setJobs] = React.useState([]);
   const {  backendUrl, companyToken } = React.useContext(AppContext);
 
   // function to fetch company jobs
@@ -28,7 +28,6 @@ const ManageJobs = () => {
 
       if (data.success) {
         setJobs(data.jobsData.reverse());
-        console.log(data.jobsData);
         toast.success("Jobs fetched successfully");
       } else {
         toast.error(data.message || "Failed to fetch jobs");
@@ -67,7 +66,7 @@ const ManageJobs = () => {
             </tr>
           </thead>
           <tbody>
-            {manageJobsData.map((job, index) => (
+            {jobs.map((job, index) => (
               <tr key={index} className="text-gray-700">
                 <td className="py-2 px-4 border-b max-sm:hidden">
                   {index + 1}
@@ -81,7 +80,7 @@ const ManageJobs = () => {
                 </td>
                 <td className="py-2 px-4 border-b text-center">{job.applicants}</td>
                 <td className="py-2 px-4 border-b">
-                  <input className="scale-125 ml-4" type="checkbox" />
+                  <input className="scale-125 ml-4" type="checkbox" checked={job.visible} />
                 </td>
               </tr>
             ))}
