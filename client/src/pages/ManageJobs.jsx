@@ -2,10 +2,51 @@ import React from "react";
 import { manageJobsData } from "../assets/assets";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
+import { AppContext } from "../context/AppContext";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 const ManageJobs = () => {
 
   const navigate = useNavigate()
+
+  const [jobs, setJobs] = React.useState(false);
+  const {  backendUrl, companyToken } = React.useContext(AppContext);
+
+  // function to fetch company jobs
+  const fetchCompanyJobs = async () => {
+    try {
+      const {data} = await axios.get(`${backendUrl}/api/company/list-jobs`, {
+        headers: {
+          token: companyToken,
+        },
+      });
+
+      if (!data || !data.success) {
+        throw new Error("Failed to fetch jobs");
+      }
+
+      if (data.success) {
+        setJobs(data.jobsData.reverse());
+        console.log(data.jobsData);
+        toast.success("Jobs fetched successfully");
+      } else {
+        toast.error(data.message || "Failed to fetch jobs");
+      }
+    } catch (error) {
+      toast.error("An error occurred while fetching jobs");
+    }
+
+  }
+
+  React.useEffect(() => {
+    if (!companyToken) {
+      toast.error("Please login to manage jobs");
+      navigate("/dashboard");
+    } else {
+      fetchCompanyJobs();
+    }
+  }, [companyToken, navigate]);
 
   return (
     <div className="container p-4 max-w-5xl">
