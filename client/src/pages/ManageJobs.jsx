@@ -38,6 +38,30 @@ const ManageJobs = () => {
 
   }
 
+  // function to change job visibility
+  const changeJobVisibility = async (id) => {
+    try {
+      const {data} = await axios.post(`${backendUrl}/api/company/change-visibility`, { id }, {
+        headers: {
+          token: companyToken,
+        },
+      });
+
+      if (data.success) {
+        setJobs((prevJobs) =>
+          prevJobs.map((job) =>
+            job._id === id ? { ...job, visible: !job.visible } : job
+          )
+        );
+        toast.success("Job visibility updated successfully");
+      } else {
+        toast.error(data.message || "Failed to update job visibility");
+      }
+    } catch (error) {
+      toast.error("An error occurred while updating job visibility");
+    }
+  }
+
   React.useEffect(() => {
     if (!companyToken) {
       toast.error("Please login to manage jobs");
@@ -80,7 +104,7 @@ const ManageJobs = () => {
                 </td>
                 <td className="py-2 px-4 border-b text-center">{job.applicants}</td>
                 <td className="py-2 px-4 border-b">
-                  <input className="scale-125 ml-4" type="checkbox" checked={job.visible} />
+                  <input onChange={() => changeJobVisibility(job._id)} className="scale-125 ml-4" type="checkbox" checked={job.visible} />
                 </td>
               </tr>
             ))}
