@@ -10,12 +10,14 @@ import JobCard from '../components/JobCard'
 import Footer from '../components/Footer'
 import axios from 'axios'
 import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
 
 const ApplyJob = () => {
 
   const { id } = useParams()
+  const navigate = useNavigate()
   const [jobData, setJobData] = React.useState(null)
-  const { jobs, backendUrl } = React.useContext(AppContext)
+  const { jobs, backendUrl, userData, userApplications } = React.useContext(AppContext)
 
   const fetchJob = async () => {
       try {
@@ -31,6 +33,26 @@ const ApplyJob = () => {
         toast.error('Error fetching job data')
       }
   }
+
+  // apply for job
+
+  const applyHandler = async () => {
+    try {
+      if (!userData) {
+      toast.error('Please login to apply for this job')
+      return
+      }
+      if (!userData.resume) {
+        navigate('/applications')
+        toast.error('Please upload your resume before applying')
+        return
+      }
+    } catch (error) {
+      toast.error('Error applying for job')
+    }
+  }
+
+
 
   React.useEffect(() => {
       fetchJob()
@@ -69,7 +91,7 @@ const ApplyJob = () => {
             </div>
           </div>
           <div className='flex flex-col justify-center text-end text-sm max-md:mx-auto max-md:text-center'>
-            <button className='bg-blue-600 p-2.5 px-10 text-white rounded'>Apply Now</button>
+            <button onClick={applyHandler} className='bg-blue-600 p-2.5 px-10 text-white rounded'>Apply Now</button>
             <p className='mt-1 text-gray-600'>Posted {moment(jobData.date).fromNow()}</p>
           </div>
         </div>
@@ -77,7 +99,7 @@ const ApplyJob = () => {
           <div className='w-full lg:w-2/3'>
             <h2 className='font-bold text-2xl mb-4'>Job Description</h2>
             <div className='rich-text' dangerouslySetInnerHTML={{ __html: jobData.description }}></div>
-            <button className='bg-blue-600 p-2.5 px-10 text-white rounded mt-10'>Apply Now</button>
+            <button onClick={applyHandler} className='bg-blue-600 p-2.5 px-10 text-white rounded mt-10'>Apply Now</button>
           </div>
           {/* Right Section More Jobs */}
           <div className='w-full lg:w-1/3 mt-8 lg:mt-0 lg:ml-8 space-y-5'>

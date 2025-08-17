@@ -1,8 +1,8 @@
 import { createContext } from 'react';
 import React from 'react';
-import { jobsData } from '../assets/assets';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { useAuth, useUser } from '@clerk/clerk-react';
 
 export const AppContext = createContext();
 
@@ -11,6 +11,9 @@ export const AppContextProvider = (props) => {
     title: '',
     location: '',
   });
+
+  const {user} = useUser();
+  const {getToken} = useAuth();
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
 
@@ -22,6 +25,32 @@ export const AppContextProvider = (props) => {
 
   const [companyToken, setCompanyToken] = React.useState(null);
   const [companyData, setCompanyData] = React.useState(null);
+
+  const [userData, setUserData] = React.useState(null);
+//  const [userToken, setUserToken] = React.useState(null);
+  const [userApplications, setUserApplications] = React.useState([]);
+
+
+  // function to fetch user data
+  const fetchUserData = async () => {
+    try {
+      const token = await getToken();
+      if (!token) {
+        toast.error('User not authenticated');
+        return;
+      }
+      const {data} = await axios.get(`${backendUrl}/api/users/user`, {headers: {Authorization: `Bearer ${token}`}});
+      if (data.success) {
+        setUserData(data.user);
+        toast.success('User data fetched successfully');
+      } else {
+        toast.error('Failed to fetch user data');
+      }
+    } catch (error) {
+      toast.error('Error fetching user data');
+    }
+  } 
+
 
   // Function to fetch jobs
   const fetchJobs = async () => {
@@ -69,6 +98,12 @@ export const AppContextProvider = (props) => {
     }
   }, [companyToken]);
 
+  React.useEffect(() => {
+    if (user) {
+      fetchUserData();
+    }
+  }, [user]);
+
   const value = {
     searchFilter,
     setSearchFilter,
@@ -83,6 +118,11 @@ export const AppContextProvider = (props) => {
     companyData,
     setCompanyData,
     backendUrl,
+    userData,
+    setUserData,
+    fetchUserData,
+    userApplications,
+    setUserApplications,
   };
 
   return (
