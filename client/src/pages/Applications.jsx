@@ -81,14 +81,14 @@ const Applications = () => {
           </tr>
         </thead>
         <tbody>
-          {jobsApplied.map((job, index) => true ? (
+          {userApplications.map((job, index) => true ? (
             <tr>
               <td className='py-3 px-4 flex items-center gap-2 border-b'>
-                <img className='w-8 h-8' src={job.logo} alt="" />
-                {job.company}
+                <img className='w-8 h-8' src={job.companyId.image} alt="" />
+                {job.companyId.name}
               </td>
-              <td className='py-2 px-4 border-b'>{job.title}</td>
-              <td className='max-sm:hidden py-2 px-4 border-b'>{job.location}</td>
+              <td className='py-2 px-4 border-b'>{job.jobId.title}</td>
+              <td className='max-sm:hidden py-2 px-4 border-b'>{job.jobId.location}</td>
               <td className='max-sm:hidden py-2 px-4 border-b'>{moment(job.date).format('DD/MM/YYYY')}</td>
               <td className='py-2 px-4 border-b'>
                 <span className={`${job.status === 'Accepted' ? 'bg-green-100' : job.status === 'Rejected' ? 'bg-red-100' : 'bg-blue-100'} py-1.5 px-4 rounded`}>
