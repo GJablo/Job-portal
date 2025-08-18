@@ -19,7 +19,8 @@ const ApplyJob = () => {
   const {getToken} = useAuth()
   const navigate = useNavigate()
   const [jobData, setJobData] = React.useState(null)
-  const { jobs, backendUrl, userData, userApplications } = React.useContext(AppContext)
+  const [isAlreadyApplied, setIsAlreadyApplied] = React.useState(false)
+  const { jobs, backendUrl, userData, userApplications, fetchUserApplications } = React.useContext(AppContext)
 
   const fetchJob = async () => {
       try {
@@ -59,6 +60,7 @@ const ApplyJob = () => {
       if (data.success) {
         toast.success('Successfully applied for the job')
         navigate('/applications')
+        await fetchUserApplications() // Refresh user applications after applying
       } else {
         toast.error(data.message || 'Failed to apply for the job')
       }
@@ -67,11 +69,22 @@ const ApplyJob = () => {
     }
   }
 
+  const checkAlreadyApplied = () => {
+    if (!userData || !userApplications) return false
+    const hasApplied = userApplications.some(application => application.jobId._id === jobData._id)
+    setIsAlreadyApplied(hasApplied)
+  }
 
-
+  
   React.useEffect(() => {
       fetchJob()
   },[id])
+
+  React.useEffect(() => {
+    if (userApplications.length > 0 && jobData) {
+      checkAlreadyApplied()
+    }
+  }, [jobData, userApplications, id])
 
 
   return jobData ? (
@@ -106,7 +119,7 @@ const ApplyJob = () => {
             </div>
           </div>
           <div className='flex flex-col justify-center text-end text-sm max-md:mx-auto max-md:text-center'>
-            <button onClick={applyHandler} className='bg-blue-600 p-2.5 px-10 text-white rounded'>Apply Now</button>
+            <button onClick={applyHandler} className='bg-blue-600 p-2.5 px-10 text-white rounded'>{isAlreadyApplied ? 'Already Applied' : 'Apply Now'}</button>
             <p className='mt-1 text-gray-600'>Posted {moment(jobData.date).fromNow()}</p>
           </div>
         </div>
