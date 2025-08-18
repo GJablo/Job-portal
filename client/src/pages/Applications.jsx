@@ -17,7 +17,7 @@ const Applications = () => {
   const [isEdit, setIsEdit] = React.useState(false)
   const [resume, setResume] = React.useState(null)
 
-  const {backendUrl, userData, userApplications, fetchUserData} = React.useContext(AppContext)
+  const {backendUrl, userData, userApplications, fetchUserData, fetchUserApplications } = React.useContext(AppContext)
 
   const updateResume = async () => {
     try {
@@ -41,6 +41,12 @@ const Applications = () => {
     setIsEdit(false)
     setResume(null)
   }
+
+  React.useEffect(() => {
+    if (user) {
+      fetchUserApplications()
+      }
+    }, [user])
 
 
   return (
