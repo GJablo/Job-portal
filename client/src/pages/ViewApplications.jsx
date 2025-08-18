@@ -8,7 +8,7 @@ import Loading from '../components/Loading'
 const ViewApplications = () => {
 
   const {backendUrl, companyToken} = React.useContext(AppContext)
-  const [applications, setApplications] = React.useState([])
+  const [applications, setApplications] = React.useState(false)
 
   // function to fetch company job applicants
 
